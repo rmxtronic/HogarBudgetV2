@@ -1,4 +1,4 @@
-package Controllers;
+package HogarBudget.api.Controllers;
 
 public class IngresoVariableController {
 }
