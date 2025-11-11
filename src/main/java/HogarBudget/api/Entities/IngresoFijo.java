@@ -1,5 +1,6 @@
 package HogarBudget.api.Entities;
 
+import HogarBudget.api.DTOs.DatosIngresoFijo;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,5 +27,12 @@ public class IngresoFijo {
         this.montoPresupuestado = montoPresupuestado;
         this.nombreIngreFi = nombreIngreFi;
         this.fecha = fecha;
+    }
+
+    public void modificar(DatosIngresoFijo datosIngresoFijo) {
+        if (datosIngresoFijo.nombre() != null) this.nombreIngreFi = datosIngresoFijo.nombre();
+        this.montoPresupuestado = datosIngresoFijo.cantidad();
+        if (datosIngresoFijo.fecha() != null) this.fecha = datosIngresoFijo.fecha();
+
     }
 }

@@ -6,12 +6,16 @@
 package HogarBudget.api.Controllers;
 
 import HogarBudget.api.DTOs.DatosIngresoFijo;
+import HogarBudget.api.Entities.IngresoFijo;
 import HogarBudget.api.Services.IngresoFijoService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/ingresos/fijos")
 public class IngresoFijoController {
@@ -23,7 +27,30 @@ public class IngresoFijoController {
     }
 
     @PostMapping
-    public void saveIngreso(@RequestBody DatosIngresoFijo datosIngresoFijo){
-        ingresoFijoService.guardar(datosIngresoFijo);
+    public ResponseEntity<IngresoFijo> guardarIngresoFijo(@Valid @RequestBody DatosIngresoFijo datosIngresoFijo){
+        IngresoFijo ingresoGuardado = ingresoFijoService.guardar(datosIngresoFijo);
+        return ResponseEntity.status(201).body(ingresoGuardado);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<DatosIngresoFijo> modificarIngresoFijo(
+            @PathVariable Long id,
+            @RequestBody DatosIngresoFijo datosIngresoFijo
+    ){
+        IngresoFijo fijoModificado = ingresoFijoService.modificar(id, datosIngresoFijo);
+        return ResponseEntity.ok(new DatosIngresoFijo(fijoModificado));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarIngresoFijo(@PathVariable Long id){
+        ingresoFijoService.eliminar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public List<IngresoFijo> listarIngresoFijo(){
+        return ingresoFijoService.listar();
+    }
+
+
 }
