@@ -4,6 +4,8 @@ import HogarBudget.api.DTOs.DatosIngresoFijo;
 import HogarBudget.api.Entities.IngresoFijo;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import HogarBudget.api.repositories.IngresoFijoRepository;
 
@@ -46,8 +48,7 @@ public class IngresoFijoService {
         ingresoFijoRepository.deleteById(id);
     }
 
-    @Transactional
-    public List<IngresoFijo> listar() {
-        return ingresoFijoRepository.findAll();
+    public Page<IngresoFijo> listar(Pageable paginas) {
+        return ingresoFijoRepository.findAll(paginas);
     }
 }

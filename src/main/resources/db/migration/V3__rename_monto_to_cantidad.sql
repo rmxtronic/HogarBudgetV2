@@ -1,0 +1,1 @@
+ALTER TABLE ingreso_variable CHANGE monto cantidad INT NOT NULL;

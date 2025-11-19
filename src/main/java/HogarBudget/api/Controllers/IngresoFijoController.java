@@ -9,6 +9,9 @@ import HogarBudget.api.DTOs.DatosIngresoFijo;
 import HogarBudget.api.Entities.IngresoFijo;
 import HogarBudget.api.Services.IngresoFijoService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,9 +51,7 @@ public class IngresoFijoController {
     }
 
     @GetMapping
-    public List<IngresoFijo> listarIngresoFijo(){
-        return ingresoFijoService.listar();
+    public ResponseEntity<Page<IngresoFijo>> listarIngresoFijo(@PageableDefault(size = 3) Pageable paginas){
+        return ResponseEntity.ok(ingresoFijoService.listar(paginas));
     }
-
-
 }
