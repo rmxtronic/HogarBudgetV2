@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("egresos/categoria")
+@RequestMapping("egreso/categorias")
 public class EgresoCategoriaController {
 
     private final EgresoCategoriaService egresoCategoriaService;
