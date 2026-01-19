@@ -49,5 +49,11 @@ public class EgresoCategoriaController {
         return ResponseEntity.ok(lista);
     }
 
+    @GetMapping("/total-presupuestado")
+    public ResponseEntity<Integer> obtenerMontoPresupuestado () {
+        int total = egresoCategoriaService.totalPresupuestado();
+        return ResponseEntity.ok(total);
+    }
+
 
 }

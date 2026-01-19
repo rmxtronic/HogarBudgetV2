@@ -51,4 +51,8 @@ public class IngresoFijoService {
     public Page<IngresoFijo> listar(Pageable paginas) {
         return ingresoFijoRepository.findAll(paginas);
     }
+
+    public int sumIngresoFijo() {
+        return ingresoFijoRepository.totalFijo();
+    }
 }

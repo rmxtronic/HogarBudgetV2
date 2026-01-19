@@ -2,6 +2,7 @@ package HogarBudget.api.Controllers;
 
 import HogarBudget.api.DTOs.DatosEDSalida;
 import HogarBudget.api.DTOs.DatosEgresoDetalle;
+import HogarBudget.api.DTOs.sumCategoria;
 import HogarBudget.api.Entities.EgresoDetalle;
 import HogarBudget.api.Services.EgresoDetalleService;
 
@@ -41,5 +42,10 @@ public class EgresoDetalleController {
     @GetMapping
     public ResponseEntity<List<DatosEDSalida>> listarEgresoDetalle (){
         return ResponseEntity.ok(egresoDetalleService.listar());
+    }
+
+    @GetMapping("/actual")
+    public ResponseEntity<List<sumCategoria>> sumCategoria(){
+        return ResponseEntity.ok(egresoDetalleService.sumCat());
     }
 }

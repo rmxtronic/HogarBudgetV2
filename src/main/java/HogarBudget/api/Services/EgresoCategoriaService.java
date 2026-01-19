@@ -45,4 +45,8 @@ public class EgresoCategoriaService {
     public List<EgresoCategoria> listar() {
         return egresoCategoriaRepository.findAll();
     }
+
+    public int totalPresupuestado() {
+        return egresoCategoriaRepository.sumaPresupuestoCategoria();
+    }
 }

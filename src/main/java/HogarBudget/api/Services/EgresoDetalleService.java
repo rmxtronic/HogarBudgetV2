@@ -2,6 +2,7 @@ package HogarBudget.api.Services;
 
 import HogarBudget.api.DTOs.DatosEDSalida;
 import HogarBudget.api.DTOs.DatosEgresoDetalle;
+import HogarBudget.api.DTOs.sumCategoria;
 import HogarBudget.api.Entities.EgresoCategoria;
 import HogarBudget.api.Entities.EgresoDetalle;
 import HogarBudget.api.repositories.EgresoCategoriaRepository;
@@ -57,5 +58,9 @@ public class EgresoDetalleService {
 
     public List<DatosEDSalida> listar() {
         return egresoDetalleRepository.findAllWithCategoria().stream().map(DatosEDSalida::new).toList();
+    }
+
+    public List<sumCategoria> sumCat() {
+        return egresoDetalleRepository.totalPorCategoria();
     }
 }

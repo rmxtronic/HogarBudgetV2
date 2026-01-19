@@ -45,4 +45,9 @@ public class IngresoVariableController {
         return ResponseEntity.ok(ingresoVariableService.listar(pagina));
     }
 
+    @GetMapping("/total")
+    public ResponseEntity<Integer> totalIngresoVariable () {
+        return ResponseEntity.ok(ingresoVariableService.sumIngresoVariable());
+    }
+
 }

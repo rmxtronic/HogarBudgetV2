@@ -45,4 +45,8 @@ public class IngresoVariableService {
     public Page<IngresoVariable> listar(Pageable pagina) {
         return ingresoVariableRepository.findAll(pagina);
     }
+
+    public int sumIngresoVariable() {
+        return ingresoVariableRepository.total();
+    }
 }

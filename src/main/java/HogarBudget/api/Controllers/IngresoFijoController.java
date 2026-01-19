@@ -54,4 +54,9 @@ public class IngresoFijoController {
     public ResponseEntity<Page<IngresoFijo>> listarIngresoFijo(@PageableDefault(size = 3) Pageable paginas){
         return ResponseEntity.ok(ingresoFijoService.listar(paginas));
     }
+
+    @GetMapping("/total")
+    public ResponseEntity<Integer> totalIngresoFijo () {
+        return ResponseEntity.ok(ingresoFijoService.sumIngresoFijo());
+    }
 }

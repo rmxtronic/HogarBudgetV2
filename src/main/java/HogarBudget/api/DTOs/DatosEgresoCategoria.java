@@ -9,5 +9,8 @@ public record DatosEgresoCategoria(
         String nombreCategoria,
 
         @NotNull
-        int montoPresupuestado) {
+        int montoPresupuestado,
+
+        @NotNull
+        boolean fija) {
 }
