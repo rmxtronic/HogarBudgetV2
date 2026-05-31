@@ -2,12 +2,12 @@ package HogarBudget.api.Services;
 
 import HogarBudget.api.DTOs.DatosEgresoCategoria;
 import HogarBudget.api.Entities.EgresoCategoria;
+import HogarBudget.api.Entities.Usuario;
 import HogarBudget.api.repositories.EgresoCategoriaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,34 +19,32 @@ public class EgresoCategoriaService {
         this.egresoCategoriaRepository = egresoCategoriaRepository;
     }
 
-    public EgresoCategoria guardar(DatosEgresoCategoria datosEgresoCategoria) {
+    public EgresoCategoria guardar(DatosEgresoCategoria datosEgresoCategoria, Usuario usuario) {
         EgresoCategoria objetoGuardado = new EgresoCategoria(datosEgresoCategoria);
-        //guardar(datosEgresoCategoria);
+        objetoGuardado.setUsuario(usuario);
         return egresoCategoriaRepository.save(objetoGuardado);
     }
 
     @Transactional
-    public EgresoCategoria editar(DatosEgresoCategoria datosEgresoCategoria, Long id) {
-        EgresoCategoria egresoAModificar = egresoCategoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No encontrada"));
+    public EgresoCategoria editar(DatosEgresoCategoria datosEgresoCategoria, Long id, Usuario usuario) {
+        EgresoCategoria egresoAModificar = egresoCategoriaRepository.findByIdAndUsuario(id, usuario)
+                .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
         egresoAModificar.modificar(datosEgresoCategoria);
         return egresoAModificar;
     }
 
-    public void eliminar(Long id) {
-        if(!egresoCategoriaRepository.existsById(id)) {
-            throw new EntityNotFoundException("No existe ingreso variable con id " + id);
+    public void eliminar(Long id, Usuario usuario) {
+        if(!egresoCategoriaRepository.existsByIdAndUsuario(id, usuario)) {
+            throw new EntityNotFoundException("No existe categoria con id " + id);
         }
-        EgresoCategoria AEliminar = egresoCategoriaRepository.getReferenceById(id);
-        egresoCategoriaRepository.delete(AEliminar);
-
+        egresoCategoriaRepository.deleteById(id);
     }
 
-    public List<EgresoCategoria> listar() {
-        return egresoCategoriaRepository.findAll();
+    public List<EgresoCategoria> listar(Usuario usuario) {
+        return egresoCategoriaRepository.findByUsuario(usuario);
     }
 
-    public int totalPresupuestado() {
-        return egresoCategoriaRepository.sumaPresupuestoCategoria();
+    public int totalPresupuestado(Usuario usuario) {
+        return egresoCategoriaRepository.sumaPresupuestoCategoria(usuario);
     }
 }

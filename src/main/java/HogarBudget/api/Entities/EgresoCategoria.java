@@ -24,6 +24,10 @@ public class EgresoCategoria {
     @Column
     private int montoPresupuestado;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
     public EgresoCategoria (DatosEgresoCategoria datosEgresoCategoria) {
         this.nombreCategoria = datosEgresoCategoria.nombreCategoria();
         this.montoPresupuestado = datosEgresoCategoria.montoPresupuestado();

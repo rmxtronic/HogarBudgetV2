@@ -5,11 +5,11 @@ import HogarBudget.api.DTOs.DatosEgresoDetalle;
 import HogarBudget.api.DTOs.sumCategoria;
 import HogarBudget.api.Entities.EgresoCategoria;
 import HogarBudget.api.Entities.EgresoDetalle;
+import HogarBudget.api.Entities.Usuario;
 import HogarBudget.api.repositories.EgresoCategoriaRepository;
 import HogarBudget.api.repositories.EgresoDetalleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,28 +27,28 @@ public class EgresoDetalleService {
         this.egresoCategoriaRepository = egresoCategoriaRepository;
     }
 
-    public EgresoDetalle guardar(DatosEgresoDetalle datosEgresoDetalle) {
-        EgresoCategoria categoria = egresoCategoriaRepository.findById(datosEgresoDetalle.idCategoria())
-                .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+    public EgresoDetalle guardar(DatosEgresoDetalle datosEgresoDetalle, Usuario usuario) {
+        EgresoCategoria categoria = egresoCategoriaRepository.findByIdAndUsuario(datosEgresoDetalle.idCategoria(), usuario)
+                .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
         EgresoDetalle nuevoEgresoDetalle = new EgresoDetalle(datosEgresoDetalle, categoria);
+        nuevoEgresoDetalle.setUsuario(usuario);
         return egresoDetalleRepository.save(nuevoEgresoDetalle);
     }
 
-    public void eliminar(Long id) {
-        if(!egresoDetalleRepository.existsById(id)){
+    public void eliminar(Long id, Usuario usuario) {
+        if(!egresoDetalleRepository.existsByIdAndUsuario(id, usuario)){
             throw new EntityNotFoundException("Este detalle no existe");
         }
-        EgresoDetalle detalle = egresoDetalleRepository.getReferenceById(id);
-        egresoDetalleRepository.delete(detalle);
+        egresoDetalleRepository.deleteById(id);
     }
 
     @Transactional
-    public EgresoDetalle editar(DatosEgresoDetalle datosEgresoDetalle, Long id) {
-        EgresoDetalle aSerEditado = egresoDetalleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Detalle no encontrado"));
+    public EgresoDetalle editar(DatosEgresoDetalle datosEgresoDetalle, Long id, Usuario usuario) {
+        EgresoDetalle aSerEditado = egresoDetalleRepository.findByIdAndUsuario(id, usuario)
+                .orElseThrow(() -> new EntityNotFoundException("Detalle no encontrado"));
         if (datosEgresoDetalle.idCategoria() > 0) {
-            EgresoCategoria nuevaCategoria = egresoCategoriaRepository.findById(datosEgresoDetalle.idCategoria())
-                    .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+            EgresoCategoria nuevaCategoria = egresoCategoriaRepository.findByIdAndUsuario(datosEgresoDetalle.idCategoria(), usuario)
+                    .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
             aSerEditado.editar(datosEgresoDetalle, nuevaCategoria);
         } else {
             aSerEditado.editar(datosEgresoDetalle);
@@ -56,11 +56,11 @@ public class EgresoDetalleService {
         return aSerEditado;
     }
 
-    public List<DatosEDSalida> listar() {
-        return egresoDetalleRepository.findAllWithCategoria().stream().map(DatosEDSalida::new).toList();
+    public List<DatosEDSalida> listar(Usuario usuario) {
+        return egresoDetalleRepository.findAllWithCategoria(usuario).stream().map(DatosEDSalida::new).toList();
     }
 
-    public List<sumCategoria> sumCat() {
-        return egresoDetalleRepository.totalPorCategoria();
+    public List<sumCategoria> sumCat(Usuario usuario) {
+        return egresoDetalleRepository.totalPorCategoria(usuario);
     }
 }

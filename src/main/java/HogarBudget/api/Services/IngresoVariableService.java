@@ -2,15 +2,13 @@ package HogarBudget.api.Services;
 
 import HogarBudget.api.DTOs.DatosIngresoVariable;
 import HogarBudget.api.Entities.IngresoVariable;
+import HogarBudget.api.Entities.Usuario;
 import HogarBudget.api.repositories.IngresoVariableRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 
 @Service
 public class IngresoVariableService {
@@ -21,32 +19,32 @@ public class IngresoVariableService {
         this.ingresoVariableRepository = ingresoVariableRepository;
     }
 
-    public IngresoVariable guardar (DatosIngresoVariable datosIngresoVariable) {
-        LocalDate fecha = datosIngresoVariable.fecha() == null ? LocalDate.now() : datosIngresoVariable.fecha();
+    public IngresoVariable guardar (DatosIngresoVariable datosIngresoVariable, Usuario usuario) {
         IngresoVariable ingresoVariable = new IngresoVariable(datosIngresoVariable);
+        ingresoVariable.setUsuario(usuario);
         return ingresoVariableRepository.save(ingresoVariable);
-
     }
 
     @Transactional
-    public IngresoVariable actualizar(DatosIngresoVariable datosIngresoVariable, Long id) {
-            IngresoVariable ingresoAActualizar = ingresoVariableRepository.getReferenceById(id);
-            ingresoAActualizar.actualizar(datosIngresoVariable);
-            return ingresoAActualizar;
+    public IngresoVariable actualizar(DatosIngresoVariable datosIngresoVariable, Long id, Usuario usuario) {
+        IngresoVariable ingresoAActualizar = ingresoVariableRepository.findByIdAndUsuario(id, usuario)
+                .orElseThrow(() -> new EntityNotFoundException("No existe ingreso variable con id " + id));
+        ingresoAActualizar.actualizar(datosIngresoVariable);
+        return ingresoAActualizar;
     }
 
-    public void eliminar(Long id) {
-        if (!ingresoVariableRepository.existsById(id)) {
+    public void eliminar(Long id, Usuario usuario) {
+        if (!ingresoVariableRepository.existsByIdAndUsuario(id, usuario)) {
             throw new EntityNotFoundException("No existe ingreso variable con id " + id);
         }
         ingresoVariableRepository.deleteById(id);
     }
 
-    public Page<IngresoVariable> listar(Pageable pagina) {
-        return ingresoVariableRepository.findAll(pagina);
+    public Page<IngresoVariable> listar(Pageable pagina, Usuario usuario) {
+        return ingresoVariableRepository.findByUsuario(usuario, pagina);
     }
 
-    public int sumIngresoVariable() {
-        return ingresoVariableRepository.total();
+    public int sumIngresoVariable(Usuario usuario) {
+        return ingresoVariableRepository.total(usuario);
     }
 }

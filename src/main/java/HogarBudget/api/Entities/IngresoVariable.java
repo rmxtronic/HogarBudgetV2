@@ -28,6 +28,10 @@ public class IngresoVariable {
     @Column
     private LocalDate fecha;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
     public IngresoVariable (DatosIngresoVariable datosIngresoVariable) {
         this.nombre = datosIngresoVariable.nombre();
         this.cantidad = datosIngresoVariable.cantidad();

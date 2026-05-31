@@ -2,6 +2,7 @@ package HogarBudget.api.Services;
 
 import HogarBudget.api.DTOs.DatosIngresoFijo;
 import HogarBudget.api.Entities.IngresoFijo;
+import HogarBudget.api.Entities.Usuario;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import HogarBudget.api.repositories.IngresoFijoRepository;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 public class IngresoFijoService {
@@ -21,8 +21,7 @@ public class IngresoFijoService {
         this.ingresoFijoRepository = ingresoFijoRepository;
     }
 
-    public IngresoFijo guardar(DatosIngresoFijo datosIngresoFijo){
-
+    public IngresoFijo guardar(DatosIngresoFijo datosIngresoFijo, Usuario usuario){
         LocalDate fecha = datosIngresoFijo.fecha() == null ? LocalDate.now() : datosIngresoFijo.fecha();
 
         IngresoFijo fijo = new IngresoFijo(
@@ -30,29 +29,32 @@ public class IngresoFijoService {
                 datosIngresoFijo.cantidad(),
                 fecha
         );
+        fijo.setUsuario(usuario);
 
         return ingresoFijoRepository.save(fijo);
     }
 
-    public IngresoFijo modificar(Long id, DatosIngresoFijo datosIngresoFijo) {
-        IngresoFijo ingresoFijo = ingresoFijoRepository.getReferenceById(id);
+    @Transactional
+    public IngresoFijo modificar(Long id, DatosIngresoFijo datosIngresoFijo, Usuario usuario) {
+        IngresoFijo ingresoFijo = ingresoFijoRepository.findByIdAndUsuario(id, usuario)
+                .orElseThrow(() -> new EntityNotFoundException("No existe ingreso fijo con el ID " + id));
         ingresoFijo.modificar(datosIngresoFijo);
         return ingresoFijoRepository.save(ingresoFijo);
     }
 
     @Transactional
-    public void eliminar(Long id) {
-        if(!ingresoFijoRepository.existsById(id)){
+    public void eliminar(Long id, Usuario usuario) {
+        if(!ingresoFijoRepository.existsByIdAndUsuario(id, usuario)){
             throw new EntityNotFoundException("No existe ingreso fijo con el ID " + id);
         }
         ingresoFijoRepository.deleteById(id);
     }
 
-    public Page<IngresoFijo> listar(Pageable paginas) {
-        return ingresoFijoRepository.findAll(paginas);
+    public Page<IngresoFijo> listar(Pageable paginas, Usuario usuario) {
+        return ingresoFijoRepository.findByUsuario(usuario, paginas);
     }
 
-    public int sumIngresoFijo() {
-        return ingresoFijoRepository.totalFijo();
+    public int sumIngresoFijo(Usuario usuario) {
+        return ingresoFijoRepository.totalFijo(usuario);
     }
 }

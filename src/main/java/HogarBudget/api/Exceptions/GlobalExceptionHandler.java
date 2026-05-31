@@ -29,4 +29,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ex.getMessage());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalArgument(IllegalArgumentException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        HttpStatus status = ex.getMessage().contains("já cadastrado")
+                ? HttpStatus.CONFLICT
+                : HttpStatus.BAD_REQUEST;
+
+        return ResponseEntity.status(status).body(error);
+    }
 }

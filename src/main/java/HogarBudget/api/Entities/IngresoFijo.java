@@ -23,6 +23,10 @@ public class IngresoFijo {
     @Column(name = "fecha")
     private LocalDate fecha;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
     public IngresoFijo(String nombreIngreFi, int montoPresupuestado, LocalDate fecha) {
         this.montoPresupuestado = montoPresupuestado;
         this.nombreIngreFi = nombreIngreFi;
