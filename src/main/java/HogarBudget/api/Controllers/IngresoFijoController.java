@@ -6,7 +6,6 @@
 package HogarBudget.api.Controllers;
 
 import HogarBudget.api.DTOs.DatosIngresoFijo;
-import HogarBudget.api.Entities.IngresoFijo;
 import HogarBudget.api.Entities.Usuario;
 import HogarBudget.api.Services.IngresoFijoService;
 import jakarta.validation.Valid;
@@ -28,10 +27,10 @@ public class IngresoFijoController {
     }
 
     @PostMapping
-    public ResponseEntity<IngresoFijo> guardarIngresoFijo(
+    public ResponseEntity<DatosIngresoFijo> guardarIngresoFijo(
             @Valid @RequestBody DatosIngresoFijo datosIngresoFijo,
             @AuthenticationPrincipal Usuario usuario){
-        IngresoFijo ingresoGuardado = ingresoFijoService.guardar(datosIngresoFijo, usuario);
+        DatosIngresoFijo ingresoGuardado = ingresoFijoService.guardar(datosIngresoFijo, usuario);
         return ResponseEntity.status(201).body(ingresoGuardado);
     }
 
@@ -40,8 +39,8 @@ public class IngresoFijoController {
             @PathVariable Long id,
             @RequestBody DatosIngresoFijo datosIngresoFijo,
             @AuthenticationPrincipal Usuario usuario){
-        IngresoFijo fijoModificado = ingresoFijoService.modificar(id, datosIngresoFijo, usuario);
-        return ResponseEntity.ok(new DatosIngresoFijo(fijoModificado));
+        DatosIngresoFijo fijoModificado = ingresoFijoService.modificar(id, datosIngresoFijo, usuario);
+        return ResponseEntity.ok(fijoModificado);
     }
 
     @DeleteMapping("/{id}")
@@ -53,7 +52,7 @@ public class IngresoFijoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<IngresoFijo>> listarIngresoFijo(
+    public ResponseEntity<Page<DatosIngresoFijo>> listarIngresoFijo(
             @PageableDefault(size = 3) Pageable paginas,
             @AuthenticationPrincipal Usuario usuario){
         return ResponseEntity.ok(ingresoFijoService.listar(paginas, usuario));

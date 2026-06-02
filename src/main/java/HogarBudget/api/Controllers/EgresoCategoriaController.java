@@ -1,7 +1,6 @@
 package HogarBudget.api.Controllers;
 
 import HogarBudget.api.DTOs.DatosEgresoCategoria;
-import HogarBudget.api.Entities.EgresoCategoria;
 import HogarBudget.api.Entities.Usuario;
 import HogarBudget.api.Services.EgresoCategoriaService;
 import org.springframework.http.ResponseEntity;
@@ -21,19 +20,19 @@ public class EgresoCategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<EgresoCategoria> guardarCategoria (
+    public ResponseEntity<DatosEgresoCategoria> guardarCategoria (
             @RequestBody DatosEgresoCategoria datosEgresoCategoria,
             @AuthenticationPrincipal Usuario usuario){
-        EgresoCategoria guardado = egresoCategoriaService.guardar(datosEgresoCategoria, usuario);
+        DatosEgresoCategoria guardado = egresoCategoriaService.guardar(datosEgresoCategoria, usuario);
         return ResponseEntity.status(201).body(guardado);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EgresoCategoria> editarCategoria (
+    public ResponseEntity<DatosEgresoCategoria> editarCategoria (
             @RequestBody DatosEgresoCategoria datosEgresoCategoria,
             @PathVariable Long id,
             @AuthenticationPrincipal Usuario usuario){
-        EgresoCategoria editado = egresoCategoriaService.editar(datosEgresoCategoria, id, usuario);
+        DatosEgresoCategoria editado = egresoCategoriaService.editar(datosEgresoCategoria, id, usuario);
         return ResponseEntity.ok(editado);
     }
 
@@ -46,9 +45,9 @@ public class EgresoCategoriaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EgresoCategoria>> listarCategorias (
+    public ResponseEntity<List<DatosEgresoCategoria>> listarCategorias (
             @AuthenticationPrincipal Usuario usuario) {
-        List<EgresoCategoria> lista = egresoCategoriaService.listar(usuario);
+        List<DatosEgresoCategoria> lista = egresoCategoriaService.listar(usuario);
         return ResponseEntity.ok(lista);
     }
 

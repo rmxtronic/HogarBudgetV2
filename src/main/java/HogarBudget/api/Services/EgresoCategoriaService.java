@@ -19,18 +19,18 @@ public class EgresoCategoriaService {
         this.egresoCategoriaRepository = egresoCategoriaRepository;
     }
 
-    public EgresoCategoria guardar(DatosEgresoCategoria datosEgresoCategoria, Usuario usuario) {
+    public DatosEgresoCategoria guardar(DatosEgresoCategoria datosEgresoCategoria, Usuario usuario) {
         EgresoCategoria objetoGuardado = new EgresoCategoria(datosEgresoCategoria);
         objetoGuardado.setUsuario(usuario);
-        return egresoCategoriaRepository.save(objetoGuardado);
+        return new DatosEgresoCategoria(egresoCategoriaRepository.save(objetoGuardado));
     }
 
     @Transactional
-    public EgresoCategoria editar(DatosEgresoCategoria datosEgresoCategoria, Long id, Usuario usuario) {
+    public DatosEgresoCategoria editar(DatosEgresoCategoria datosEgresoCategoria, Long id, Usuario usuario) {
         EgresoCategoria egresoAModificar = egresoCategoriaRepository.findByIdAndUsuario(id, usuario)
                 .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
         egresoAModificar.modificar(datosEgresoCategoria);
-        return egresoAModificar;
+        return new DatosEgresoCategoria(egresoAModificar);
     }
 
     public void eliminar(Long id, Usuario usuario) {
@@ -40,8 +40,10 @@ public class EgresoCategoriaService {
         egresoCategoriaRepository.deleteById(id);
     }
 
-    public List<EgresoCategoria> listar(Usuario usuario) {
-        return egresoCategoriaRepository.findByUsuario(usuario);
+    public List<DatosEgresoCategoria> listar(Usuario usuario) {
+        return egresoCategoriaRepository.findByUsuario(usuario).stream()
+                .map(DatosEgresoCategoria::new)
+                .toList();
     }
 
     public int totalPresupuestado(Usuario usuario) {

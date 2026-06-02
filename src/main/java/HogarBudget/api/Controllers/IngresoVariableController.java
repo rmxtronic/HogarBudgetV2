@@ -1,7 +1,6 @@
 package HogarBudget.api.Controllers;
 
 import HogarBudget.api.DTOs.DatosIngresoVariable;
-import HogarBudget.api.Entities.IngresoVariable;
 import HogarBudget.api.Entities.Usuario;
 import HogarBudget.api.Services.IngresoVariableService;
 import org.springframework.data.domain.Page;
@@ -21,10 +20,10 @@ public class IngresoVariableController {
     }
 
     @PostMapping
-    public ResponseEntity<IngresoVariable> guardarIngresoVariable(
+    public ResponseEntity<DatosIngresoVariable> guardarIngresoVariable(
             @RequestBody DatosIngresoVariable datosIngresoVariable,
             @AuthenticationPrincipal Usuario usuario) {
-        IngresoVariable ingresoGuardado = ingresoVariableService.guardar(datosIngresoVariable, usuario);
+        DatosIngresoVariable ingresoGuardado = ingresoVariableService.guardar(datosIngresoVariable, usuario);
         return ResponseEntity.status(201).body(ingresoGuardado);
     }
 
@@ -33,8 +32,8 @@ public class IngresoVariableController {
             @RequestBody DatosIngresoVariable datosIngresoVariable,
             @PathVariable Long id,
             @AuthenticationPrincipal Usuario usuario) {
-        IngresoVariable variableActualizado = ingresoVariableService.actualizar(datosIngresoVariable, id, usuario);
-        return ResponseEntity.ok(new DatosIngresoVariable(variableActualizado));
+        DatosIngresoVariable variableActualizado = ingresoVariableService.actualizar(datosIngresoVariable, id, usuario);
+        return ResponseEntity.ok(variableActualizado);
     }
 
     @DeleteMapping("/{id}")
@@ -46,7 +45,7 @@ public class IngresoVariableController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<IngresoVariable>> listarVariables(
+    public ResponseEntity<Page<DatosIngresoVariable>> listarVariables(
             Pageable pagina,
             @AuthenticationPrincipal Usuario usuario){
         return ResponseEntity.ok(ingresoVariableService.listar(pagina, usuario));

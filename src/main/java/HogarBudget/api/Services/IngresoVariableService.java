@@ -19,18 +19,18 @@ public class IngresoVariableService {
         this.ingresoVariableRepository = ingresoVariableRepository;
     }
 
-    public IngresoVariable guardar (DatosIngresoVariable datosIngresoVariable, Usuario usuario) {
+    public DatosIngresoVariable guardar (DatosIngresoVariable datosIngresoVariable, Usuario usuario) {
         IngresoVariable ingresoVariable = new IngresoVariable(datosIngresoVariable);
         ingresoVariable.setUsuario(usuario);
-        return ingresoVariableRepository.save(ingresoVariable);
+        return new DatosIngresoVariable(ingresoVariableRepository.save(ingresoVariable));
     }
 
     @Transactional
-    public IngresoVariable actualizar(DatosIngresoVariable datosIngresoVariable, Long id, Usuario usuario) {
+    public DatosIngresoVariable actualizar(DatosIngresoVariable datosIngresoVariable, Long id, Usuario usuario) {
         IngresoVariable ingresoAActualizar = ingresoVariableRepository.findByIdAndUsuario(id, usuario)
                 .orElseThrow(() -> new EntityNotFoundException("No existe ingreso variable con id " + id));
         ingresoAActualizar.actualizar(datosIngresoVariable);
-        return ingresoAActualizar;
+        return new DatosIngresoVariable(ingresoAActualizar);
     }
 
     public void eliminar(Long id, Usuario usuario) {
@@ -40,8 +40,9 @@ public class IngresoVariableService {
         ingresoVariableRepository.deleteById(id);
     }
 
-    public Page<IngresoVariable> listar(Pageable pagina, Usuario usuario) {
-        return ingresoVariableRepository.findByUsuario(usuario, pagina);
+    public Page<DatosIngresoVariable> listar(Pageable pagina, Usuario usuario) {
+        return ingresoVariableRepository.findByUsuario(usuario, pagina)
+                .map(DatosIngresoVariable::new);
     }
 
     public int sumIngresoVariable(Usuario usuario) {

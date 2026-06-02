@@ -21,7 +21,7 @@ public class IngresoFijoService {
         this.ingresoFijoRepository = ingresoFijoRepository;
     }
 
-    public IngresoFijo guardar(DatosIngresoFijo datosIngresoFijo, Usuario usuario){
+    public DatosIngresoFijo guardar(DatosIngresoFijo datosIngresoFijo, Usuario usuario){
         LocalDate fecha = datosIngresoFijo.fecha() == null ? LocalDate.now() : datosIngresoFijo.fecha();
 
         IngresoFijo fijo = new IngresoFijo(
@@ -31,15 +31,15 @@ public class IngresoFijoService {
         );
         fijo.setUsuario(usuario);
 
-        return ingresoFijoRepository.save(fijo);
+        return new DatosIngresoFijo(ingresoFijoRepository.save(fijo));
     }
 
     @Transactional
-    public IngresoFijo modificar(Long id, DatosIngresoFijo datosIngresoFijo, Usuario usuario) {
+    public DatosIngresoFijo modificar(Long id, DatosIngresoFijo datosIngresoFijo, Usuario usuario) {
         IngresoFijo ingresoFijo = ingresoFijoRepository.findByIdAndUsuario(id, usuario)
                 .orElseThrow(() -> new EntityNotFoundException("No existe ingreso fijo con el ID " + id));
         ingresoFijo.modificar(datosIngresoFijo);
-        return ingresoFijoRepository.save(ingresoFijo);
+        return new DatosIngresoFijo(ingresoFijoRepository.save(ingresoFijo));
     }
 
     @Transactional
@@ -50,8 +50,9 @@ public class IngresoFijoService {
         ingresoFijoRepository.deleteById(id);
     }
 
-    public Page<IngresoFijo> listar(Pageable paginas, Usuario usuario) {
-        return ingresoFijoRepository.findByUsuario(usuario, paginas);
+    public Page<DatosIngresoFijo> listar(Pageable paginas, Usuario usuario) {
+        return ingresoFijoRepository.findByUsuario(usuario, paginas)
+                .map(DatosIngresoFijo::new);
     }
 
     public int sumIngresoFijo(Usuario usuario) {
