@@ -11,6 +11,8 @@ import java.time.LocalDate;
 
 public record DatosIngresoVariable(
 
+        Long id,
+
         @NotBlank(message = "El nombre no puede estar vacio")
         String nombre,
 
@@ -23,6 +25,7 @@ public record DatosIngresoVariable(
 
     public DatosIngresoVariable(IngresoVariable variableModificado) {
         this(
+                variableModificado.getId(),
                 variableModificado.getNombre(),
                 variableModificado.getCantidad(),
                 variableModificado.getFecha());

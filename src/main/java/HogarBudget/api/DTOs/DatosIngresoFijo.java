@@ -10,6 +10,8 @@ import java.time.LocalDate;
 
 public record DatosIngresoFijo(
 
+        Long id,
+
         @NotBlank(message = "El nombre no puede estar vacio")
         String nombre,
 
@@ -22,6 +24,7 @@ public record DatosIngresoFijo(
 
         public DatosIngresoFijo(IngresoFijo fijoModificado) {
                 this(
+                        fijoModificado.getId(),
                         fijoModificado.getNombreIngreFi(),
                         fijoModificado.getMontoPresupuestado(),
                         fijoModificado.getFecha());

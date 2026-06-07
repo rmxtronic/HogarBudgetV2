@@ -10,6 +10,8 @@ import java.time.LocalDate;
 
 public record DatosEDSalida(
 
+        Long id,
+
         @NotNull
         String nombreLugar,
 
@@ -22,10 +24,9 @@ public record DatosEDSalida(
         @NotNull
         String nombreCategoria) {
 
-
-
     public DatosEDSalida(EgresoDetalle egresoDetalle) {
         this(
+                egresoDetalle.getId(),
                 egresoDetalle.getNombreLugar(),
                 egresoDetalle.getMonto(),
                 egresoDetalle.getFecha(),

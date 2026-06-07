@@ -5,12 +5,15 @@ import HogarBudget.api.DTOs.DatosRegistro;
 import HogarBudget.api.DTOs.DatosTokenResponse;
 import HogarBudget.api.Services.AuthService;
 import jakarta.validation.Valid;
+import HogarBudget.api.Entities.Usuario;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -23,9 +26,10 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody @Valid DatosRegistro datos) {
-        authService.registrar(datos);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<Map<String, Object>> register(@RequestBody @Valid DatosRegistro datos) {
+        Usuario usuario = authService.registrar(datos);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Map.of("id", usuario.getId(), "email", usuario.getEmail()));
     }
 
     @PostMapping("/login")

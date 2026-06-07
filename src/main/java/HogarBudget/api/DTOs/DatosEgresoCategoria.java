@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 
 public record DatosEgresoCategoria(
 
+        Long id,
+
         @NotBlank(message = "Ponle nombre")
         String nombreCategoria,
 
@@ -17,6 +19,7 @@ public record DatosEgresoCategoria(
 
         public DatosEgresoCategoria(EgresoCategoria categoria) {
                 this(
+                        categoria.getId(),
                         categoria.getNombreCategoria(),
                         categoria.getMontoPresupuestado(),
                         false);

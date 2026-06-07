@@ -24,7 +24,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void registrar(DatosRegistro datos) {
+    public Usuario registrar(DatosRegistro datos) {
         if (usuarioRepository.existsByEmail(datos.email())) {
             throw new IllegalArgumentException("Email já cadastrado");
         }
@@ -34,7 +34,7 @@ public class AuthService {
         usuario.setEmail(datos.email());
         usuario.setSenha(passwordEncoder.encode(datos.senha()));
 
-        usuarioRepository.save(usuario);
+        return usuarioRepository.save(usuario);
     }
 
     public DatosTokenResponse login(DatosLogin datos) {
@@ -45,7 +45,7 @@ public class AuthService {
             throw new IllegalArgumentException("Credenciais inválidas");
         }
 
-        String token = jwtService.generateToken(usuario.getId(), usuario.getEmail());
+        String token = jwtService.generateToken(usuario.getId(), usuario.getEmail(), usuario.getNome());
         return new DatosTokenResponse(token);
     }
 }
